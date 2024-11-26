@@ -1,11 +1,20 @@
 <article>
     <h4>{{ card.question }}</h4>
-    <p>{{ card.answer }}</p>
-    <hr>
-    <a href="{% url 'card-update' card.id %}" role="button">
-        ✏️ Edit Card
-    </a>
-    <a href="{% url 'card-delete' card.id %}" role="button">
-        Delete Card
-    </a>
+
+    <!-- Show answer on homepage, hide when extracting from the box -->
+    {% if not check_card %}
+        <p>{{ card.answer }}</p>
+        <hr>
+        <a href="{% url 'card-update' card.id %}" role="button">
+            ✏️ Edit Card
+        </a>
+        <a href="{% url 'card-delete' card.id %}" role="button">
+            Delete Card
+        </a>
+    {% else %}
+        <details>
+            <summary>Reveal Answer</summary>
+            <p>{{ card.answer }}</p>
+        </details>
+    {% endif %}
 </article>

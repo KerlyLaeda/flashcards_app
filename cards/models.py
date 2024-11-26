@@ -15,3 +15,13 @@ class Card(models.Model):
 
     def __str__(self):
         return self.question
+
+    def move(self, solved):
+        # move card to next box if u know answer, else to 1st
+        new_box = self.box + 1 if solved else BOXES[0]
+
+        if new_box in BOXES:  # handling new_box = 6 (if solved was in 5th box)
+            self.box = new_box
+            self.save()
+
+        return self
