@@ -1,9 +1,10 @@
 import random
 
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.urls import reverse_lazy
 from .models import Card
+from .forms import CardCheckForm
 
 
 class CardListView(ListView):
@@ -28,6 +29,7 @@ class CardDeleteView(DeleteView):
 
 class BoxView(CardListView):
     template_name = "cards/box.html"
+    form_class = CardCheckForm
 
     # only return the cards where the box number matches the box_num value
     def get_queryset(self):
@@ -42,3 +44,11 @@ class BoxView(CardListView):
             context["check_card"] = random.choice(self.object_list)
 
         return context
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            card = get_object_or_404(Card, id=form.cleaned_data["card_id"])
+            card.move(form.cleaned_data["solved"])
+
+        return redirect(request.META.get("HTTP_REFERER"))
