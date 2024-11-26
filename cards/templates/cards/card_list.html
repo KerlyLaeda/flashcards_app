@@ -1,11 +1,16 @@
 {% extends "cards/layout.html" %}
+{% load humanize %}
 
 {% block content %}
     <h2>All Cards</h2>
+    <a href="{% url 'card-create' %}" role="button" style="color: #000">
+        ✨ Create New Card
+    </a>
     {% for card in card_list %}
-        <h3>🗃 {{ card.box }} Box</h3>
-        <article>
-            {{ card }}
-        </article>
+        <!-- Show box number and all cards in that box, then next box with its cards etc.-->
+        {% ifchanged %}
+            <h3>🗃 {{ card.box | ordinal }} Box</h3>
+        {% endifchanged %}
+        {% include "cards/card.html" %}  <!-- load a subtemplate for card -->
     {% endfor %}
 {% endblock content %}
